@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/color_056c62">
+
+    <RelativeLayout
+        android:id="@+id/rlTitle"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/color_008e82"
+        >
+
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:text="天气测试"
+            />
+
+    </RelativeLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/srlWeather"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                >
+
+                <LinearLayout
+                    android:id="@+id/llQueryArea"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/x70"
+                    android:layout_marginTop="@dimen/x50"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:background="@color/color_008e82"
+                    >
+
+                    <EditText
+                        android:id="@+id/etCity"
+                        android:layout_width="@dimen/x300"
+                        android:layout_height="match_parent"
+                        android:singleLine="true"
+                        android:imeOptions="actionSearch"
+                        android:background="@null"
+                        android:gravity="center"
+                        android:textSize="@dimen/x40"
+                        android:textColor="@color/white"
+                        android:hint="请输入城市"
+                        android:textColorHint="@color/color_DEDEDE"
+                        />
+
+                    <View
+                        android:layout_width="@dimen/y2"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"/>
+
+                    <Button
+                        android:id="@+id/btQuery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:background="?android:selectableItemBackground"
+                        android:textSize="@dimen/x40"
+                        android:textColor="@color/white"
+                        android:text="查询"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x50"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:id="@+id/tvSelectCity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/x80"
+                        android:paddingLeft="@dimen/x30"
+                        android:paddingRight="@dimen/x30"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:textSize="@dimen/x40"
+                        android:textColor="@color/white"
+                        android:text="选择城市"/>
+
+                    <TextView
+                        android:id="@+id/tvSelectDistrict"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/x80"
+                        android:layout_marginLeft="@dimen/x50"
+                        android:paddingLeft="@dimen/x30"
+                        android:paddingRight="@dimen/x30"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:textSize="@dimen/x40"
+                        android:textColor="@color/white"
+                        android:text="选择地区"/>
+
+                </LinearLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clWeatherArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x20"
+                    android:layout_marginRight="@dimen/x20"
+                    android:layout_marginTop="@dimen/x40"
+                    android:layout_marginBottom="@dimen/x40"
+                    >
+
+                    <ImageView
+                        android:id="@+id/ivWeather"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginTop="@dimen/x30"
+                        android:layout_marginRight="@dimen/x30"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:id="@+id/tvCity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        android:layout_marginTop="@dimen/x20"
+                        android:layout_marginLeft="@dimen/x20"
+                        android:textSize="@dimen/x36"
+                        android:textColor="@color/white"
+                        android:text="城市：" />
+
+                    <TextView
+                        android:id="@+id/tvTemperature"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toLeftOf="@id/tvCity"
+                        app:layout_constraintTop_toBottomOf="@id/tvCity"
+                        android:layout_marginTop="@dimen/x20"
+                        android:textSize="@dimen/x36"
+                        android:textColor="@color/white"
+                        android:text="温度：" />
+
+                    <TextView
+                        android:id="@+id/tvHumidity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toLeftOf="@id/tvTemperature"
+                        app:layout_constraintTop_toBottomOf="@id/tvTemperature"
+                        android:layout_marginTop="@dimen/x20"
+                        android:textSize="@dimen/x36"
+                        android:textColor="@color/white"
+                        android:text="湿度：" />
+
+
+                    <TextView
+                        android:id="@+id/tvDirect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toLeftOf="@id/tvHumidity"
+                        app:layout_constraintTop_toBottomOf="@id/tvHumidity"
+                        android:layout_marginTop="@dimen/x20"
+                        android:textSize="@dimen/x36"
+                        android:textColor="@color/white"
+                        android:text="风向：" />
+
+                    <TextView
+                        android:id="@+id/tvWindPower"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toLeftOf="@id/tvDirect"
+                        app:layout_constraintTop_toBottomOf="@id/tvDirect"
+                        android:layout_marginTop="@dimen/x20"
+                        android:textSize="@dimen/x36"
+                        android:textColor="@color/white"
+                        android:text="风力：" />
+
+                    <TextView
+                        android:id="@+id/tvWeatherInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toLeftOf="@id/tvWindPower"
+                        app:layout_constraintTop_toBottomOf="@id/tvWindPower"
+                        android:layout_marginTop="@dimen/x20"
+                        android:textSize="@dimen/x36"
+                        android:textColor="@color/white"
+                        android:text="天气状况：" />
+
+                    <TextView
+                        android:id="@+id/tvAQI"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toLeftOf="@id/tvWeatherInfo"
+                        app:layout_constraintTop_toBottomOf="@id/tvWeatherInfo"
+                        android:layout_marginTop="@dimen/x20"
+                        android:textSize="@dimen/x36"
+                        android:textColor="@color/white"
+                        android:text="空气质量指数：" />
+
+                    <TextView
+                        android:id="@+id/tvFuture5DayLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvAQI"
+                        android:layout_marginTop="@dimen/x20"
+                        android:textSize="@dimen/x36"
+                        android:textColor="@color/white"
+                        android:text="未来5天天气状况" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvFuture"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvFuture5DayLabel"
+                        android:layout_marginTop="@dimen/x20"
+                        android:nestedScrollingEnabled="false">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+                    <LinearLayout
+                        android:id="@+id/llExpand"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        android:layout_marginLeft="@dimen/x20"
+                        android:layout_marginRight="@dimen/x20"
+                        app:layout_constraintTop_toBottomOf="@id/rvFuture"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginBottom="@dimen/x20"
+                        android:layout_marginTop="@dimen/x20"
+                        android:paddingLeft="@dimen/x30"
+                        android:paddingRight="@dimen/x30"
+                        android:paddingTop="@dimen/x3"
+                        android:paddingBottom="@dimen/x3"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvExpand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/x32"
+                            android:textColor="@color/white"
+                            android:text="收起" />
+
+                        <ImageView
+                            android:id="@+id/ivExpand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_arrow_drop_up_white_24dp"/>
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+
+</LinearLayout>

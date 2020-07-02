@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/clFutureWeatherArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_marginRight="@dimen/x20"
+        android:layout_marginBottom="@dimen/x20"
+        android:paddingBottom="@dimen/x20"
+        >
+
+        <LinearLayout
+            android:id="@+id/llNight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/x20"
+            android:layout_marginRight="@dimen/x20"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/x10"
+                android:text="夜晚"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x30" />
+
+            <ImageView
+                android:id="@+id/ivNight"
+                android:layout_width="@dimen/x120"
+                android:layout_height="@dimen/x120"
+                android:scaleType="fitXY" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/llNight"
+            android:layout_marginTop="@dimen/x20"
+            android:layout_marginRight="@dimen/x20"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/x10"
+                android:text="白天"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x30" />
+
+            <ImageView
+                android:id="@+id/ivDay"
+                android:layout_width="@dimen/x120"
+                android:layout_height="@dimen/x120"
+                android:scaleType="fitXY" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_marginTop="@dimen/x20"
+            android:text="日期："
+            android:textColor="@color/white"
+            android:textSize="@dimen/x36"
+            />
+
+
+        <TextView
+            android:id="@+id/tvTemperature"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvDate"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_marginTop="@dimen/x20"
+            android:text="温度："
+            android:textColor="@color/white"
+            android:textSize="@dimen/x36"
+            />
+
+        <TextView
+            android:id="@+id/tvWeatherInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvTemperature"
+            android:layout_toLeftOf="@id/llDay"
+            android:layout_marginRight="@dimen/x20"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_marginTop="@dimen/x20"
+            android:text="天气状况："
+            android:textColor="@color/white"
+            android:textSize="@dimen/x36"
+            />
+
+        <TextView
+            android:id="@+id/tvDirect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvWeatherInfo"
+            android:layout_marginLeft="@dimen/x20"
+            android:layout_marginTop="@dimen/x20"
+            android:text="风向："
+            android:textColor="@color/white"
+            android:textSize="@dimen/x36"
+            />
+
+
+
+    </RelativeLayout>
+
+</LinearLayout>

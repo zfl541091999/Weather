@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        >
+
+        <TextView
+            android:id="@+id/tvDistrictName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/x20"
+            android:paddingBottom="@dimen/x20"
+            android:layout_marginLeft="@dimen/x60"
+            android:gravity="left|center_vertical"
+            android:textSize="@dimen/x40"
+            android:textColor="@color/white"
+            android:text="地区名称"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
