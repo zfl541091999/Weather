@@ -1,10 +1,13 @@
 package com.zfl.weather.mvvm.v.activity
 
+import android.Manifest
 import android.animation.ValueAnimator
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.text.InputFilter
 import android.text.TextUtils
 import android.view.View
@@ -16,19 +19,43 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.lottie.LottieAnimationView
+import com.ftd.livepermissions.LivePermissions
+import com.ftd.livepermissions.PermissionResult
 import com.zfl.weather.R
 import com.zfl.weather.mvvm.bean.Future
-import com.zfl.weather.mvvm.bean.ProvinceBean
 import com.zfl.weather.mvvm.bean.Result
 import com.zfl.weather.mvvm.v.SearchingDialog
 import com.zfl.weather.mvvm.v.adapter.FutureWeatherAdapter
+import com.zfl.weather.mvvm.vm.DownloadViewModel
 import com.zfl.weather.mvvm.vm.WeatherViewModel
+import com.zfl.weather.request.ProgressListener
+import com.zfl.weather.request.ZFLRequest
 import com.zfl.weather.utils.LogUtil
 import com.zfl.weather.utils_java.BGUtil
 import com.zfl.weather.utils_java.ScreenUtil
 import kotlinx.android.synthetic.main.aty_test_weather.*
+import java.io.File
 
-class WeatherActivity : AppCompatActivity() {
+class WeatherActivity : AppCompatActivity(){
+    //download test
+    val downloadViewModel : DownloadViewModel by lazy {
+        ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+            .create(DownloadViewModel::class.java)
+    }
+
+    val downloadDialog : ProgressDialog by lazy {
+        ProgressDialog(this).also {
+            it.setTitle("下载")
+            it.setMessage("正在下载，请稍后...")
+            it.setProgressNumberFormat("%1d KB/%2d KB")
+            it.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+            it.setCancelable(false)
+            it.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", { dialog, which ->
+                //TODO 后续添加取消下载功能
+                downloadViewModel.cancelDownload()
+            })
+        }
+    }
 
     val weatherViewModel: WeatherViewModel by lazy {
         ViewModelProvider.AndroidViewModelFactory.getInstance(application)
@@ -130,6 +157,21 @@ class WeatherActivity : AppCompatActivity() {
             LogUtil.e(it.toString())
         })
 
+        //test
+        downloadViewModel.error.observe(this, Observer {
+            closeDownloadDialog()
+            Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+            LogUtil.e(it.toString())
+        })
+
+    }
+
+    private fun closeDownloadDialog() {
+        if (downloadDialog.isShowing) {
+            downloadDialog.dismiss()
+            downloadDialog.progress = 0
+            downloadDialog.max = 0
+        }
     }
 
     private fun initView() {
@@ -195,7 +237,43 @@ class WeatherActivity : AppCompatActivity() {
         rvFuture.adapter = futureWeatherAdapter
 
         btQuery.setOnClickListener {
-            queryWeather(etCity.text.toString().trim())
+//            queryWeather(etCity.text.toString().trim())
+            //download test
+            LivePermissions(this)
+                .request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ).observe(this, Observer {
+                    when(it) {
+                        is PermissionResult.Grant -> {
+                            downloadDialog.show()
+                            var filePath = "自定义存储路径"
+                            var url = "自定义下载网址"
+                            downloadViewModel.download(filePath, url, object : ProgressListener {
+                                override fun progress(progress: Long, total: Long, done: Boolean) {
+                                    downloadDialog.max = (total/1024).toInt()
+                                    downloadDialog.progress = (progress/1024).toInt()
+                                    if (done) {
+                                        closeDownloadDialog()
+                                    }
+                                    LogUtil.e("progress:" + progress + " total:" + total + " done:" + done)
+                                }
+                            })
+                        }
+                        is PermissionResult.Rationale -> {
+                            //被拒绝的权限
+                            it.permissions.forEach {
+
+                            }
+                        }
+                        is PermissionResult.Deny -> {
+                            //被拒绝的权限，并且勾选了不再询问
+                            it.permissions.forEach {
+
+                            }
+                        }
+
+                    }
+                })
         }
 
         llExpand.setOnClickListener {

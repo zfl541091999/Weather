@@ -42,4 +42,11 @@ interface IRetrofitApi {
      */
     @POST
     fun upload(@Url url: String, @Body body: RequestBody): Call<ResponseBody>
+
+    /**
+     * 发起下载请求
+     */
+    @Streaming
+    @GET
+    fun download(@Url url: String, @QueryMap parameters: MutableMap<String, Any>): Call<ResponseBody>
 }

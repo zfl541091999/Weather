@@ -1,5 +1,8 @@
 package com.zfl.weather.request
 
+import android.text.TextUtils
+import com.zfl.weather.utils.LogUtil
+import com.zfl.weather.utils_java.FileUtil
 import com.zfl.weather.utils_java.NetWorkUtil
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -7,6 +10,8 @@ import okhttp3.Response
 import okhttp3.ResponseBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 /**
@@ -40,6 +45,7 @@ class ZFLRequest {
                 Method.GET -> iRetrofitApi.get(requestParam.url, requestParam.paramsMap).execute().body()
                 Method.POST -> iRetrofitApi.post(requestParam.url, requestParam.paramsMap).execute().body()
                 Method.POSTFORM -> iRetrofitApi.postForm(requestParam.url, requestParam.paramsMap).execute().body()
+                Method.DOWNLOAD -> iRetrofitApi.download(requestParam.url, requestParam.paramsMap).execute().body()
                 else -> null
             }
             return responseBody
@@ -62,11 +68,16 @@ class ZFLRequest {
         }
 
 
-        fun getRetrofit(requestParam: RequestParam) : Retrofit = Retrofit.Builder()
-            .baseUrl(NetWorkUtil.getHostName(requestParam.url))
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpBuilder.build())
-            .build()
+        fun getRetrofit(requestParam: RequestParam) : Retrofit {
+            when(requestParam.method) {
+                Method.DOWNLOAD -> okHttpBuilder.addNetworkInterceptor(ProgressInterceptor(requestParam.progressListener))
+            }
+            return Retrofit.Builder()
+                .baseUrl(NetWorkUtil.getHostName(requestParam.url))
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpBuilder.build())
+                .build()
+        }
 
 
     }

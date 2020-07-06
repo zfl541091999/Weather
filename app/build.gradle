@@ -63,4 +63,9 @@ dependencies {
     //快速recyclerView适配器
     implementation "com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4"
 
+    implementation 'org.conscrypt:conscrypt-android:2.4.0'
+
+    //基于livedata的权限请求
+    implementation 'com.ftd.livepermissions:livepermissions:1.0.2'
+
 }
