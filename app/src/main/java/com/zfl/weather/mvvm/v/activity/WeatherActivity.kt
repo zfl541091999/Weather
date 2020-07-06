@@ -237,43 +237,43 @@ class WeatherActivity : AppCompatActivity(){
         rvFuture.adapter = futureWeatherAdapter
 
         btQuery.setOnClickListener {
-//            queryWeather(etCity.text.toString().trim())
+            queryWeather(etCity.text.toString().trim())
             //download test
-            LivePermissions(this)
-                .request(Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ).observe(this, Observer {
-                    when(it) {
-                        is PermissionResult.Grant -> {
-                            downloadDialog.show()
-                            var filePath = "自定义存储路径"
-                            var url = "自定义下载网址"
-                            downloadViewModel.download(filePath, url, object : ProgressListener {
-                                override fun progress(progress: Long, total: Long, done: Boolean) {
-                                    downloadDialog.max = (total/1024).toInt()
-                                    downloadDialog.progress = (progress/1024).toInt()
-                                    if (done) {
-                                        closeDownloadDialog()
-                                    }
-                                    LogUtil.e("progress:" + progress + " total:" + total + " done:" + done)
-                                }
-                            })
-                        }
-                        is PermissionResult.Rationale -> {
-                            //被拒绝的权限
-                            it.permissions.forEach {
-
-                            }
-                        }
-                        is PermissionResult.Deny -> {
-                            //被拒绝的权限，并且勾选了不再询问
-                            it.permissions.forEach {
-
-                            }
-                        }
-
-                    }
-                })
+//            LivePermissions(this)
+//                .request(Manifest.permission.READ_EXTERNAL_STORAGE,
+//                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                ).observe(this, Observer {
+//                    when(it) {
+//                        is PermissionResult.Grant -> {
+//                            downloadDialog.show()
+//                            var filePath = "自定义存储路径"
+//                            var url = "自定义下载网址"
+//                            downloadViewModel.download(filePath, url, object : ProgressListener {
+//                                override fun progress(progress: Long, total: Long, done: Boolean) {
+//                                    downloadDialog.max = (total/1024).toInt()
+//                                    downloadDialog.progress = (progress/1024).toInt()
+//                                    if (done) {
+//                                        closeDownloadDialog()
+//                                    }
+//                                    LogUtil.e("progress:" + progress + " total:" + total + " done:" + done)
+//                                }
+//                            })
+//                        }
+//                        is PermissionResult.Rationale -> {
+//                            //被拒绝的权限
+//                            it.permissions.forEach {
+//
+//                            }
+//                        }
+//                        is PermissionResult.Deny -> {
+//                            //被拒绝的权限，并且勾选了不再询问
+//                            it.permissions.forEach {
+//
+//                            }
+//                        }
+//
+//                    }
+//                })
         }
 
         llExpand.setOnClickListener {
