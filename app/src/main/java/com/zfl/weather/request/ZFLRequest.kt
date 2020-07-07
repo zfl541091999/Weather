@@ -46,6 +46,7 @@ class ZFLRequest {
                 Method.POST -> iRetrofitApi.post(requestParam.url, requestParam.paramsMap).execute().body()
                 Method.POSTFORM -> iRetrofitApi.postForm(requestParam.url, requestParam.paramsMap).execute().body()
                 Method.DOWNLOAD -> iRetrofitApi.download(requestParam.url, requestParam.paramsMap).execute().body()
+                Method.UPLOAD -> iRetrofitApi.upload(requestParam.url, requestParam.paramsMap, requestParam.uploadBody).execute().body()
                 else -> null
             }
             return responseBody

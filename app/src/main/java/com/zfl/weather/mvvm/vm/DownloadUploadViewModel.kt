@@ -10,7 +10,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class DownloadViewModel(application: Application) : BaseViewModel(application) {
+class DownloadUploadViewModel(application: Application) : BaseViewModel(application) {
 
     var downloadTag = ""
 
@@ -19,6 +19,19 @@ class DownloadViewModel(application: Application) : BaseViewModel(application) {
             withContext(Dispatchers.IO) {
                 ZFLRequest.get(url)
                     .asDownload(filePath, progressListener)
+                    .request()
+            }
+        }
+    }
+
+    fun upload(filePath: String, url: String, progressListener: ProgressListener) {
+        val file = File(filePath)
+        launch {
+            withContext(Dispatchers.IO) {
+                ZFLRequest.post(url)
+                    .addHeader("Authorization", "")
+                    .add("file", file)
+                    .asUpload(progressListener)
                     .request()
             }
         }

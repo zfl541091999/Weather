@@ -1,7 +1,7 @@
 package com.zfl.weather.request
 
 enum class Method {
-    //TODO 暂时先实现这几种方法，后续再实现带进度的上传
+    //后续会根据需求，逐步实现全部请求方法
     GET,
     POST,
     POSTFORM,
@@ -9,5 +9,6 @@ enum class Method {
     PUTFORM,
     DELETE,
     DELETEFORM,
-    DOWNLOAD
+    DOWNLOAD,
+    UPLOAD
 }

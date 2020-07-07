@@ -26,10 +26,9 @@ import com.zfl.weather.mvvm.bean.Future
 import com.zfl.weather.mvvm.bean.Result
 import com.zfl.weather.mvvm.v.SearchingDialog
 import com.zfl.weather.mvvm.v.adapter.FutureWeatherAdapter
-import com.zfl.weather.mvvm.vm.DownloadViewModel
+import com.zfl.weather.mvvm.vm.DownloadUploadViewModel
 import com.zfl.weather.mvvm.vm.WeatherViewModel
 import com.zfl.weather.request.ProgressListener
-import com.zfl.weather.request.ZFLRequest
 import com.zfl.weather.utils.LogUtil
 import com.zfl.weather.utils_java.BGUtil
 import com.zfl.weather.utils_java.ScreenUtil
@@ -38,12 +37,12 @@ import java.io.File
 
 class WeatherActivity : AppCompatActivity(){
     //download test
-    val downloadViewModel : DownloadViewModel by lazy {
+    val downloadUploadViewModel : DownloadUploadViewModel by lazy {
         ViewModelProvider.AndroidViewModelFactory.getInstance(application)
-            .create(DownloadViewModel::class.java)
+            .create(DownloadUploadViewModel::class.java)
     }
 
-    val downloadDialog : ProgressDialog by lazy {
+    val downloadUploadDialog : ProgressDialog by lazy {
         ProgressDialog(this).also {
             it.setTitle("下载")
             it.setMessage("正在下载，请稍后...")
@@ -52,7 +51,7 @@ class WeatherActivity : AppCompatActivity(){
             it.setCancelable(false)
             it.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", { dialog, which ->
                 //TODO 后续添加取消下载功能
-                downloadViewModel.cancelDownload()
+                downloadUploadViewModel.cancelDownload()
             })
         }
     }
@@ -158,7 +157,7 @@ class WeatherActivity : AppCompatActivity(){
         })
 
         //test
-        downloadViewModel.error.observe(this, Observer {
+        downloadUploadViewModel.error.observe(this, Observer {
             closeDownloadDialog()
             Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
             LogUtil.e(it.toString())
@@ -167,10 +166,10 @@ class WeatherActivity : AppCompatActivity(){
     }
 
     private fun closeDownloadDialog() {
-        if (downloadDialog.isShowing) {
-            downloadDialog.dismiss()
-            downloadDialog.progress = 0
-            downloadDialog.max = 0
+        if (downloadUploadDialog.isShowing) {
+            downloadUploadDialog.dismiss()
+            downloadUploadDialog.progress = 0
+            downloadUploadDialog.max = 0
         }
     }
 
@@ -237,43 +236,52 @@ class WeatherActivity : AppCompatActivity(){
         rvFuture.adapter = futureWeatherAdapter
 
         btQuery.setOnClickListener {
-            queryWeather(etCity.text.toString().trim())
+//            queryWeather(etCity.text.toString().trim())
+            //upload test
             //download test
-//            LivePermissions(this)
-//                .request(Manifest.permission.READ_EXTERNAL_STORAGE,
-//                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-//                ).observe(this, Observer {
-//                    when(it) {
-//                        is PermissionResult.Grant -> {
-//                            downloadDialog.show()
-//                            var filePath = "自定义存储路径"
-//                            var url = "自定义下载网址"
-//                            downloadViewModel.download(filePath, url, object : ProgressListener {
-//                                override fun progress(progress: Long, total: Long, done: Boolean) {
-//                                    downloadDialog.max = (total/1024).toInt()
-//                                    downloadDialog.progress = (progress/1024).toInt()
-//                                    if (done) {
-//                                        closeDownloadDialog()
-//                                    }
-//                                    LogUtil.e("progress:" + progress + " total:" + total + " done:" + done)
-//                                }
-//                            })
-//                        }
-//                        is PermissionResult.Rationale -> {
-//                            //被拒绝的权限
-//                            it.permissions.forEach {
-//
-//                            }
-//                        }
-//                        is PermissionResult.Deny -> {
-//                            //被拒绝的权限，并且勾选了不再询问
-//                            it.permissions.forEach {
-//
-//                            }
-//                        }
-//
-//                    }
-//                })
+            LivePermissions(this)
+                .request(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ).observe(this, Observer {
+                    when(it) {
+                        is PermissionResult.Grant -> {
+                            downloadUploadDialog.setTitle("上传")
+                            downloadUploadDialog.setMessage("正在上传，请稍后...")
+                            downloadUploadDialog.show()
+                            //upload test
+                            //filepath 你想要上传的文件路径（全称）
+                            var filePath = Environment.getExternalStorageDirectory().path +
+                                    File.separator + "tieba" + File.separator +
+                                    "F1EEC1C3116B6CDB20D269ACB291647A.jpg"
+                            //url 接收上传文件的api的url
+                            var url = ""
+                            downloadUploadViewModel.upload(filePath, url, object : ProgressListener {
+                                override fun progress(progress: Long, total: Long, done: Boolean) {
+                                    downloadUploadDialog.max = (total/1024).toInt()
+                                    downloadUploadDialog.progress = (progress/1024).toInt()
+                                    if (done) {
+                                        closeDownloadDialog()
+                                    }
+                                    LogUtil.e("progress:" + progress + " total:" + total + " done:" + done)
+                                }
+                            })
+                        }
+                        is PermissionResult.Rationale -> {
+                            //被拒绝的权限
+                            it.permissions.forEach {
+
+                            }
+                        }
+                        is PermissionResult.Deny -> {
+                            //被拒绝的权限，并且勾选了不再询问
+                            it.permissions.forEach {
+
+                            }
+                        }
+
+                    }
+                })
         }
 
         llExpand.setOnClickListener {

@@ -5,6 +5,11 @@ import com.google.gson.Gson
 import com.zfl.weather.utils.JsonUtil
 import com.zfl.weather.utils.LogUtil
 import com.zfl.weather.utils_java.FileUtil
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
 import java.io.File
 import java.io.IOException
@@ -22,6 +27,17 @@ class RequestParam(method: Method, url: String){
     var progressListener : ProgressListener? = null
     //下载文件路径
     var downloadFilePath : String = ""
+    //生成用于上传文件的requestBody的builder
+    val multipartBodyBuilder by lazy {
+        MultipartBody.Builder().also {
+            it.setType(MultipartBody.FORM)
+        }
+    }
+    //上传文件时使用的带进度的requestBody
+    val uploadBody by lazy {
+        ProgressRequestBody(multipartBodyBuilder.build(), progressListener)
+    }
+
 
     init {
         this.method = method
@@ -33,8 +49,13 @@ class RequestParam(method: Method, url: String){
         return this
     }
 
-    fun add(key: String, value: Any): RequestParam{
-        paramsMap.put(key, value)
+    fun add(key: String, value: Any): RequestParam {
+        if (value is File) {
+            multipartBodyBuilder.addFormDataPart(key, value.name,
+                value.asRequestBody("multipart/form-data;charset=utf-8".toMediaTypeOrNull()))
+        } else {
+            paramsMap.put(key, value)
+        }
         return this
     }
 
@@ -46,6 +67,12 @@ class RequestParam(method: Method, url: String){
     fun asDownload(filePath : String, progressListener: ProgressListener) : RequestParam {
         method = Method.DOWNLOAD
         downloadFilePath = filePath
+        this.progressListener = progressListener
+        return this
+    }
+
+    fun asUpload(progressListener: ProgressListener) : RequestParam {
+        method = Method.UPLOAD
         this.progressListener = progressListener
         return this
     }
