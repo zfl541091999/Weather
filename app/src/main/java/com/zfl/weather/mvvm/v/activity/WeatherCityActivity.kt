@@ -195,7 +195,7 @@ class WeatherCityActivity: AppCompatActivity()  {
                         is PermissionResult.Grant -> {
 //                            downloadUploadDialog.setTitle("上传")
 //                            downloadUploadDialog.setMessage("正在上传，请稍后...")
-//                            downloadUploadDialog.show()
+                            downloadUploadDialog.show()
                             //download test
                             //filepath 你自己存放文件的路径
                             var filePath = Environment.getExternalStorageDirectory().path +
