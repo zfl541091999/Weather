@@ -1,5 +1,6 @@
 package com.zfl.weather.mvvm.m
 
+import androidx.lifecycle.LifecycleOwner
 import com.zfl.weather.mvvm.bean.*
 import com.zfl.weather.mvvm.vm.WeatherViewModel
 import com.zfl.weather.request.ZFLRequest
@@ -58,18 +59,18 @@ class WeatherDataSource (weatherViewModel: WeatherViewModel) :
         }
     }
 
-    suspend fun getWeather(city: String):WeatherDataBody {
+    suspend fun getWeather(lifecycleOwner: LifecycleOwner, city: String):WeatherDataBody {
         return request {
-            ZFLRequest.get(weatherDataUrl)
+            ZFLRequest.get(lifecycleOwner, weatherDataUrl)
                 .add("key", key)
                 .add("city", city)
                 .requestAs(WeatherDataBody::class.java)
         }
     }
 
-    suspend fun getCityList():WeatherCityListBody {
+    suspend fun getCityList(lifecycleOwner: LifecycleOwner):WeatherCityListBody {
         return request {
-            ZFLRequest.get(weatherCityUrl)
+            ZFLRequest.get(lifecycleOwner, weatherCityUrl)
                 .add("key", key)
                 .requestAs(WeatherCityListBody::class.java)
         }

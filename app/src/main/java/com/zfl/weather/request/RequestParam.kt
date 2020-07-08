@@ -1,6 +1,7 @@
 package com.zfl.weather.request
 
 import android.text.TextUtils
+import androidx.lifecycle.LifecycleOwner
 import com.google.gson.Gson
 import com.zfl.weather.utils.JsonUtil
 import com.zfl.weather.utils.LogUtil
@@ -14,8 +15,10 @@ import okhttp3.ResponseBody
 import java.io.File
 import java.io.IOException
 
-class RequestParam(method: Method, url: String){
-
+class RequestParam(lifecycleOwner: LifecycleOwner, method: Method, url: String){
+    //跟此次请求相关的生命周期持有者
+    var lifecycleOwner : LifecycleOwner
+    //请求url
     var url: String
     //请求方法
     var method: Method
@@ -23,6 +26,8 @@ class RequestParam(method: Method, url: String){
     val headersMap: MutableMap<String, String> by lazy { HashMap<String, String>() }
     //请求参数
     val paramsMap: MutableMap<String, Any> by lazy { HashMap<String, Any>()}
+    //请求tag，用于取消
+    var tag: String? = null
     //下载，上传请求进度
     var progressListener : ProgressListener? = null
     //下载文件路径
@@ -40,6 +45,7 @@ class RequestParam(method: Method, url: String){
 
 
     init {
+        this.lifecycleOwner = lifecycleOwner
         this.method = method
         this.url = url
     }
@@ -56,6 +62,15 @@ class RequestParam(method: Method, url: String){
         } else {
             paramsMap.put(key, value)
         }
+        return this
+    }
+
+    /**
+     * 给请求设置tag，以便于用户指定取消
+     * @param tag 请求tag
+     */
+    fun setTag(tag: String) : RequestParam {
+        this.tag = tag
         return this
     }
 

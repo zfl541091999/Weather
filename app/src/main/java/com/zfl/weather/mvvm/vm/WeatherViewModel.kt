@@ -2,6 +2,7 @@ package com.zfl.weather.mvvm.vm
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import com.zfl.weather.mvvm.bean.*
 import com.zfl.weather.mvvm.m.WeatherDataSource
@@ -30,21 +31,21 @@ class WeatherViewModel(application: Application) : BaseViewModel(application) {
         indexProvinceData = MutableLiveData()
     }
 
-    fun getWeather(city: String) {
+    fun getWeather(lifecycleOwner: LifecycleOwner, city: String) {
         launch {
-            weatherResultData.value = weatherDataSource.getWeather(city).result
+            weatherResultData.value = weatherDataSource.getWeather(lifecycleOwner, city).result
         }
     }
 
-    fun getCityDistrictList() {
+    fun getCityDistrictList(lifecycleOwner: LifecycleOwner) {
         launch {
-            weatherCityDistrictData.value = weatherDataSource.generateProvinceList(weatherDataSource.getCityList())
+            weatherCityDistrictData.value = weatherDataSource.generateProvinceList(weatherDataSource.getCityList(lifecycleOwner))
         }
     }
 
-    fun getStickyCityList() {
+    fun getStickyCityList(lifecycleOwner: LifecycleOwner) {
         launch {
-            weatherDataSource.generateStickyCityAndIndexList(weatherDataSource.getCityList())
+            weatherDataSource.generateStickyCityAndIndexList(weatherDataSource.getCityList(lifecycleOwner))
         }
     }
 

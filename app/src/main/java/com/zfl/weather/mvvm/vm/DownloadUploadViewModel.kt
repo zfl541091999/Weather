@@ -1,34 +1,35 @@
 package com.zfl.weather.mvvm.vm
 
 import android.app.Application
-import android.os.Environment
+import androidx.lifecycle.LifecycleOwner
 import com.zfl.weather.request.ProgressListener
 import com.zfl.weather.request.ZFLRequest
-import com.zfl.weather.utils.LogUtil
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.util.*
 
 class DownloadUploadViewModel(application: Application) : BaseViewModel(application) {
 
     var downloadTag = ""
 
-    fun download(filePath: String, url: String, progressListener: ProgressListener) {
-        downloadTag = launch {
+    fun download(lifecycleOwner: LifecycleOwner, filePath: String, url: String, progressListener: ProgressListener) {
+        downloadTag = UUID.randomUUID().toString()
+        launch {
             withContext(Dispatchers.IO) {
-                ZFLRequest.get(url)
+                ZFLRequest.get(lifecycleOwner, url)
+                    .setTag(downloadTag)
                     .asDownload(filePath, progressListener)
                     .request()
             }
         }
     }
 
-    fun upload(filePath: String, url: String, progressListener: ProgressListener) {
+    fun upload(lifecycleOwner: LifecycleOwner, filePath: String, url: String, progressListener: ProgressListener) {
         val file = File(filePath)
         launch {
             withContext(Dispatchers.IO) {
-                ZFLRequest.post(url)
+                ZFLRequest.post(lifecycleOwner, url)
                     .addHeader("Authorization", "")
                     .add("file", file)
                     .asUpload(progressListener)
@@ -38,7 +39,7 @@ class DownloadUploadViewModel(application: Application) : BaseViewModel(applicat
     }
 
     fun cancelDownload () {
-        cancelJob(downloadTag)
+        ZFLRequest.cancel(downloadTag)
     }
 
 }

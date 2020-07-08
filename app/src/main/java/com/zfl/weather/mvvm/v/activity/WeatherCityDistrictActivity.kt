@@ -57,7 +57,7 @@ class WeatherCityDistrictActivity : AppCompatActivity() {
     private fun getCityList() {
         showLoading()
         rvCityDistrict.postDelayed(Runnable {
-            weatherViewModel.getCityDistrictList()
+            weatherViewModel.getCityDistrictList(this)
         }, 6000)//测试lottie动画
     }
 

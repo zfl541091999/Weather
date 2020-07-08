@@ -36,25 +36,7 @@ import kotlinx.android.synthetic.main.aty_test_weather.*
 import java.io.File
 
 class WeatherActivity : AppCompatActivity(){
-    //download test
-    val downloadUploadViewModel : DownloadUploadViewModel by lazy {
-        ViewModelProvider.AndroidViewModelFactory.getInstance(application)
-            .create(DownloadUploadViewModel::class.java)
-    }
 
-    val downloadUploadDialog : ProgressDialog by lazy {
-        ProgressDialog(this).also {
-            it.setTitle("下载")
-            it.setMessage("正在下载，请稍后...")
-            it.setProgressNumberFormat("%1d KB/%2d KB")
-            it.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
-            it.setCancelable(false)
-            it.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", { dialog, which ->
-                //TODO 后续添加取消下载功能
-                downloadUploadViewModel.cancelDownload()
-            })
-        }
-    }
 
     val weatherViewModel: WeatherViewModel by lazy {
         ViewModelProvider.AndroidViewModelFactory.getInstance(application)
@@ -156,21 +138,8 @@ class WeatherActivity : AppCompatActivity(){
             LogUtil.e(it.toString())
         })
 
-        //test
-        downloadUploadViewModel.error.observe(this, Observer {
-            closeDownloadDialog()
-            Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
-            LogUtil.e(it.toString())
-        })
 
-    }
 
-    private fun closeDownloadDialog() {
-        if (downloadUploadDialog.isShowing) {
-            downloadUploadDialog.dismiss()
-            downloadUploadDialog.progress = 0
-            downloadUploadDialog.max = 0
-        }
     }
 
     private fun initView() {
@@ -236,52 +205,7 @@ class WeatherActivity : AppCompatActivity(){
         rvFuture.adapter = futureWeatherAdapter
 
         btQuery.setOnClickListener {
-//            queryWeather(etCity.text.toString().trim())
-            //upload test
-            //download test
-            LivePermissions(this)
-                .request(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ).observe(this, Observer {
-                    when(it) {
-                        is PermissionResult.Grant -> {
-                            downloadUploadDialog.setTitle("上传")
-                            downloadUploadDialog.setMessage("正在上传，请稍后...")
-                            downloadUploadDialog.show()
-                            //upload test
-                            //filepath 你想要上传的文件路径（全称）
-                            var filePath = Environment.getExternalStorageDirectory().path +
-                                    File.separator + "tieba" + File.separator +
-                                    "F1EEC1C3116B6CDB20D269ACB291647A.jpg"
-                            //url 接收上传文件的api的url
-                            var url = ""
-                            downloadUploadViewModel.upload(filePath, url, object : ProgressListener {
-                                override fun progress(progress: Long, total: Long, done: Boolean) {
-                                    downloadUploadDialog.max = (total/1024).toInt()
-                                    downloadUploadDialog.progress = (progress/1024).toInt()
-                                    if (done) {
-                                        closeDownloadDialog()
-                                    }
-                                    LogUtil.e("progress:" + progress + " total:" + total + " done:" + done)
-                                }
-                            })
-                        }
-                        is PermissionResult.Rationale -> {
-                            //被拒绝的权限
-                            it.permissions.forEach {
-
-                            }
-                        }
-                        is PermissionResult.Deny -> {
-                            //被拒绝的权限，并且勾选了不再询问
-                            it.permissions.forEach {
-
-                            }
-                        }
-
-                    }
-                })
+            queryWeather(etCity.text.toString().trim())
         }
 
         llExpand.setOnClickListener {
@@ -336,7 +260,7 @@ class WeatherActivity : AppCompatActivity(){
         }
         showLoading()
         tvSelectCity.postDelayed(Runnable {
-            weatherViewModel.getWeather(city)
+            weatherViewModel.getWeather(this, city)
         }, 6000)//测试lottie动画
     }
 
